@@ -67,12 +67,12 @@ DATA = {
     },
     'gen.gendemand.realisation': {
         'driver': 'hackaton_eet.data.loaders.RealisedData',
-        'file_location': 'gen/enecogen_clean.csv',
+        'file_location': 'gen/gendemand_clean.csv',
         'columns': ['allocatie_gendemand', 'h2qt_allocation_demand'],
     },
     'gen.gendemand.forecast': {
         'driver': 'hackaton_eet.data.loaders.PredictedData',
-        'file_location': 'gen/enecogen_clean.csv',
+        'file_location': 'gen/gendemand_clean.csv',
         'columns': ['da_forecast_gendemand', 'h2qt_forecast_demand'],
     },
     'gen.weather.forecast': {
