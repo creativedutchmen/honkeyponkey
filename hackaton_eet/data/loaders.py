@@ -108,7 +108,7 @@ class Data(object):
 
 class RealisedData(Data):
     def get_offset(self):
-        return 0
+        return -1
 
 
 class PredictedData(Data):
