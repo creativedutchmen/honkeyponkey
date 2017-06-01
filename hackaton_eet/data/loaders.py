@@ -48,14 +48,13 @@ class Data(object):
         date_offset = pd.DateOffset(days=self.get_offset())
 
         start = (
-            start_date +
-            pd.DateOffset(days=int(max(self.lags))) +
+            start_date.date() +
+            pd.DateOffset(days=int(max(self.lags))) -
             date_offset
         ).date()
 
         end = (
-            end_date -
-            date_offset
+            end_date
         )
 
         ptus = pd.date_range(
@@ -72,7 +71,10 @@ class Data(object):
 
         locs = np.add(
             ptulocs.reshape(1, -1),
-            -np.tile(96 * np.array(self.lags), (len(ptulocs), 1)).T
+            -1 * np.tile(
+                96 * (np.array(self.lags) - self.get_offset()),
+                (len(ptulocs), 1)
+            ).T
         )
 
         res_data = (
@@ -106,15 +108,19 @@ class Data(object):
 
 class RealisedData(Data):
     def get_offset(self):
-        return 1
+        return 0
 
 
 class PredictedData(Data):
-    pass
+    def get_offset(self):
+        return 1
 
 
 class TargetData(Data):
     lags = [1, ]
+
+    def get_offset(self):
+        return 1
 
     def get_row_names(self):
         names = []
