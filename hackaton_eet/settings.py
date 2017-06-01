@@ -1,6 +1,6 @@
 import os
 
-DATA_PATH = os.path.abspath(os.path.join(__file__, '..', 'data'))
+DATA_PATH = os.path.abspath(os.path.join(__file__, '..', '..', 'data'))
 
 DATA = {
     'tennet.target': {
