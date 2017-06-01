@@ -37,7 +37,10 @@ DATA = {
     },
     'tennet.onbalans': {
         'driver': 'hackaton_eet.data.loaders.RealisedData',
-        'file_location': 'tennet/onbalans/onbalans_clean.csv'
+        'file_location': 'tennet/onbalans/onbalans_clean.csv',
+        'columns': ["regeltoestand", "afnemen_EURMWh", "invoeden_EURMWh",
+                    "afregelvermogen_MW", "opregelvermogen_MW", "saldo_MW",
+                    "onbalans_MW", "onbalans_MWh", "inkoop_MW", "verkoop_MW"]
     },
     'reuters.dayahead': {
         'driver': 'hackaton_eet.data.loaders.PredictedData',
@@ -62,7 +65,7 @@ DATA = {
     'gen.enecogen': {
         'driver': 'hackaton_eet.data.loaders.PredictedData',
         'file_location': 'gen/enecogen_clean.csv',
-        'columns': ['ALLOC_EET.AMC.ENECOGEN'],
+        'columns': ['ALLOC_EET-AMC-ENECOGEN'],
     },
     'gen.gendemand.realisation': {
         'driver': 'hackaton_eet.data.loaders.RealisedData',
