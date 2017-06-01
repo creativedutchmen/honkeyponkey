@@ -39,6 +39,8 @@ class Data(object):
             .tz_localize('UTC')
             .tz_convert(pytz.timezone('Europe/Amsterdam'))
         ).resample('15min').ffill()
+        
+        self.data = self.data[self.columns]
 
     def get_ptu_lag_data(self):
         # Lags are in days here. Makes working with AR models easier
