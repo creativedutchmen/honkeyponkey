@@ -17,13 +17,12 @@ DATA = {
     'tennet.igcc': {
         'driver': 'hackaton_eet.data.loaders.RealisedData',
         'file_location': 'tennet/igcc/igcc_clean.csv',
-        'columns': ['mean_IGCC_op', 'max_IGCC_op', 'mean_IGCC_af', 'max_IGCC_af',
-                    'mean_opregelen', 'mean_Afregelen', 'mean_opregelen_reserve',
-                    'mean_afregelen_reserve', 'mean_Mid_prijs_opregelen',
-                    'max_Hoogste_prijs_opregelen', 'min_Laagste_prijs_afregelen',
-                    'max_rampUp', 'avg_rampUp', 'max_rampCrossOpregel',
-                    'IGCCBijdrage_op', 'IGCCBijdrage_af', 'Hoogste_prijs_opregelen',
-                    'Mid_prijs_opregelen', 'Laagste_prijs_afregelen']
+        'columns': ["mean_IGCC_op", "max_IGCC_op", "mean_IGCC_af", "max_IGCC_af",
+                    "mean_opregelen", "mean_Afregelen", "mean_opregelen_reserve",
+                    "mean_afregelen_reserve", "mean_Mid_prijs_opregelen",
+                    "max_Hoogste_prijs_opregelen", "min_Laagste_prijs_afregelen",
+                    "max_rampUp", "avg_rampUp", "max_rampCrossOpregel",
+                    "max_rampCrossOpregel_sqr"]
     },
     'tennet.ladderomvang': {
         'driver': 'hackaton_eet.data.loaders.RealisedData',
