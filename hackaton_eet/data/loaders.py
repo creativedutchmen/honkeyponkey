@@ -40,32 +40,39 @@ class Data(object):
             .tz_convert(pytz.timezone('Europe/Amsterdam'))
         ).resample('15min').ffill()
 
-    def get_lag_data(self):
-        start_date = self.data.index.min().date()
+    def get_ptu_lag_data(self):
+        # Lags are in days here. Makes working with AR models easier
+        start_date = self.data.index.min()
         end_date = self.data.index.max().date()
 
-        date_offset = self.get_date_offset()
+        date_offset = pd.DateOffset(days=self.get_offset())
+
         start = (
             start_date +
-            max(self.lags) * pd.DateOffset(minutes=15) +
-            pd.DateOffset(hours=10)
-        ).date() + pd.DateOffset(hours=10)
+            pd.DateOffset(days=int(max(self.lags))) +
+            date_offset
+        ).date()
 
-        days = (
-            pd.date_range(
-                start=start + pd.DateOffset(days=1) - date_offset,
-                end=end_date - date_offset
-            )
-            .tz_localize('Europe/Amsterdam')
-            # .tz_convert(pytz.timezone('Europe/Amsterdam'))
+        end = (
+            end_date -
+            date_offset
         )
 
-        daylocs = np.array(
-            self.data.index.get_indexer_for(self.data.loc[days].index)
+        ptus = pd.date_range(
+            start=start,
+            end=end,
+            freq='15min'
+        ).tz_localize('UTC').tz_convert(
+            pytz.timezone('Europe/Amsterdam')
         )
+
+        ptulocs = np.array(
+            self.data.index.get_indexer_for(self.data.loc[ptus].index)
+        )
+
         locs = np.add(
-            daylocs.reshape(1, -1),
-            -np.tile(np.array(self.lags), (len(daylocs), 1)).T
+            ptulocs.reshape(1, -1),
+            -np.tile(96 * np.array(self.lags), (len(ptulocs), 1)).T
         )
 
         res_data = (
@@ -73,43 +80,33 @@ class Data(object):
             .iloc[
                 locs.flatten()
             ]
-            .sort_index()
             .values
+            .reshape(-1, len(self.columns)).T
+            .reshape(len(self.columns) * len(self.lags), -1)
         )
-        # Numpy. Why you no allow chaining?
-        res_data = (
-            np.array(
-                np.vsplit(
-                    res_data,
-                    len(res_data) / len(self.lags)
-                )
-            )
-            .T
-            .reshape(len(self.lags) * len(self.columns), -1)
-        )
-
-        row_names = self.get_row_names(locs)
 
         return pd.DataFrame(
             res_data,
-            columns=(days + date_offset).date,
-            index=row_names
+            index=self.get_row_names(),
+            columns=self.data.iloc[
+                ptulocs
+            ].index
         )
 
-    def get_row_names(self, locs):
+    def get_row_names(self):
         names = []
         for column in self.columns:
-            for lag in reversed(self.lags):
+            for lag in self.lags:
                 names += ["%s.%s.lag_%s" % (self.name, column, lag)]
         return names
 
-    def get_date_offset(self):
-        return pd.DateOffset(days=0)
+    def get_offset(self):
+        return 0
 
 
 class RealisedData(Data):
-    def get_date_offset(self):
-        return pd.DateOffset(days=1)
+    def get_offset(self):
+        return 1
 
 
 class PredictedData(Data):
@@ -117,7 +114,13 @@ class PredictedData(Data):
 
 
 class TargetData(Data):
-    lags = [x for x in range(0, 24*4)]
+    lags = [1, ]
+
+    def get_row_names(self):
+        names = []
+        for column in self.columns:
+            names += ["%s" % (column)]
+        return names
 
 
 def get_data_dict(datasets):
@@ -136,5 +139,5 @@ def get_data(datasets):
     sets = get_data_dict(datasets)
     res = pd.DataFrame()
     for dataset in sets.values():
-        res = res.append(dataset.get_lag_data())
+        res = res.append(dataset.get_ptu_lag_data())
     return res
