@@ -53,7 +53,7 @@ DATA = {
         'file_location': 'price_hub/pricehub_clean.csv',
         'columns': ['EEXSPOT', 'PNSPOT', 'APXSPOT', 'BPXSPOT',
                     'EEXCHSPOT', 'N2EXSPOT', 'TTF', 'EUA',
-                    'SPARK_NL', 'APIEUR', 'DARK_DE', 'SPARK_NL'],
+                    'SPARK_NL', 'APIEUR', 'DARK_DE'],
     },
     'feestdagen': {
         'driver': 'hackaton_eet.data.loaders.PredictedData',
