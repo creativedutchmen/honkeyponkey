@@ -144,8 +144,11 @@ def get_data_dict(datasets):
 
 
 def get_data(datasets):
+    dfs = []
     sets = get_data_dict(datasets)
-    res = pd.DataFrame()
     for dataset in sets.values():
-        res = res.append(dataset.get_ptu_lag_data())
-    return res
+        dfs.append(dataset.get_ptu_lag_data())
+    new_width = min([x.shape[1] for x in dfs])
+
+    ret = pd.DataFrame()
+    return ret.append([d[d.columns[-new_width:]] for d in dfs])
